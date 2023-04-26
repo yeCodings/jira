@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+
+/__json_server_mock__
+
 # testing
 /coverage
 
@@ -24,3 +27,4 @@ yarn-error.log*
 
 # Ignore example Markdown file
 CHANGELOG.md
+create-app.md
