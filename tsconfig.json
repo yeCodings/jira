@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    // 解决绝对路径层数过多
+    "baseUrl": "./src",
     "target": "es5",
     "lib": [
       "dom",
