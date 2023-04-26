@@ -29,7 +29,7 @@ export const useMount = (callback: () => void) => {
 
 // 一个unknown类型的值不可以赋值给其他变量，也不可以读取任何的方法
 // 使用泛型来解决这个问题，传什么类型 返回的 return debouncedValue 就是什么类型
-export const useDebounce = (value: unknown, delay?: number): any => {
+export const useDebounce = <V>(value: V, delay?: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value)
 
   useEffect(() => {
