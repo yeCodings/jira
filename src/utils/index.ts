@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
 
 // 排除为0的状况
-export const isFalsy = (value) => value === 0 ? false : !value;
+export const isFalsy = (value: any) => value === 0 ? false : !value;
 
 // 在一个函数里，改变传入的对象本身是不好的
-export const cleanObject = (object) => {
+export const cleanObject = (object: object) => {
 
   // 等同于Object.assign({},object)
   const result = { ...object }
 
   Object.keys(result).forEach(key => {
+    // @ts-ignore
     const value = result[key];
     if (isFalsy(value)) {
+      //@ts-ignore
       delete result[key]
     }
   })
@@ -19,13 +21,13 @@ export const cleanObject = (object) => {
   return result;
 }
 
-export const useMount = (callback) => {
+export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback()
   }, [])
 }
 
-export const useDebounce = (value, delay) => {
+export const useDebounce = (value: any, delay?: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value)
 
   useEffect(() => {
