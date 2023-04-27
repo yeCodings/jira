@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react"
 import { SearchPanel } from "./search-panel"
 import { List } from './list'
 import { cleanObject, useDebounce, useMount } from "utils";
-import * as qs from 'qs'
 import { useHttp } from "utils/http";
 
 const apiUrl = process.env.REACT_APP_API_URL;

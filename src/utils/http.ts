@@ -11,7 +11,10 @@ interface Config extends RequestInit {
 }
 
 // { data, token, headers, ...customConfig }: Config ={} 加上默认值就会自动变为 可选
-export const http = async (endpoint: string, { data, token, headers, ...customConfig }: Config = {}) => {
+export const http = async (
+  endpoint: string,
+  { data, token, headers, ...customConfig }: Config = {}
+) => {
   const config = {
     method: 'GET',
     headers: {

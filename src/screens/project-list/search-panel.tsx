@@ -1,3 +1,4 @@
+import { Form, Input, Select } from "antd";
 import React, { useState, useEffect } from "react"
 
 export interface User {
@@ -20,21 +21,23 @@ interface SearchPanelProps {
 
 export const SearchPanel = ({ users, param, setParam }: SearchPanelProps) => {
 
-  return <form action="">
+  return <Form action="">
     <div>
-      <input type="text" value={param.name} onChange={evt => setParam({
+      <Input type="text" value={param.name} onChange={evt => setParam({
         ...param,
         name: evt.target.value
       })} />
-      <select value={param.personId} onChange={evt => setParam({
-        ...param,
-        personId: evt.target.value
-      })}>
-        <option value="">负责人</option>
+      <Select
+        value={param.personId}
+        onChange={value => setParam({
+          ...param,
+          personId: value
+        })}>
+        <Select.Option value="">负责人</Select.Option>
         {
-          users.map(user => <option key={user.id} value={user.id}>{user.name}</option>)
+          users.map(user => <Select.Option key={user.id} value={user.id}>{user.name}</Select.Option>)
         }
-      </select>
+      </Select>
     </div>
-  </form>
+  </Form>
 }
