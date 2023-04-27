@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 export const isFalsy = (value: unknown) => value === 0 ? false : !value;
 
 // 在一个函数里，改变传入的对象本身是不好的
+// 清除对象里的空值
 export const cleanObject = (object: object) => {
 
   // 等同于Object.assign({},object)
@@ -29,6 +30,7 @@ export const useMount = (callback: () => void) => {
 
 // 一个unknown类型的值不可以赋值给其他变量，也不可以读取任何的方法
 // 使用泛型来解决这个问题，传什么类型 返回的 return debouncedValue 就是什么类型
+// hooks防抖函数
 export const useDebounce = <V>(value: V, delay?: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value)
 
