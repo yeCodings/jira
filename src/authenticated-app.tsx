@@ -1,22 +1,48 @@
 import styled from "@emotion/styled"
-import { Button } from "antd"
+import { Button, Dropdown, Menu, MenuProps, Space } from "antd"
 import { Row } from "components/lib"
 import { useAuth } from "context/auth-context"
 import { ProjectListScreen } from "screens/project-list"
+import { ReactComponent as SoftWareLogo } from 'assets/jirasoftware.svg'
+
 
 
 export const AuthenticatedApp = () => {
-  const { logout } = useAuth()
+  const { logout, user } = useAuth()
+  const items: MenuProps['items'] = [
+    {
+      key: '1',
+      label: (
+        <a target="_blank" onClick={logout}>
+          登出
+        </a>
+      ),
+    },
+  ]
   return (
     <Container>
       <Header between={true}>
         <HeaderLeft gap={true}>
-          <h2>Logo</h2>
+          <SoftWareLogo width={'2.5rem'} color={'rgb(38,132,255)'} />
           <h2>项目</h2>
           <h2>用户</h2>
         </HeaderLeft>
         <HeaderRight>
-          <Button onClick={logout}>登出</Button>
+          {/* <Dropdown >
+            <Menu>
+              <Menu.Item key={'logout'}>
+                <a onClick={logout}>登出</a>
+              </Menu.Item>
+              <a onClick={e => e.preventDefault()}>Hi~,{user?.name}</a>
+            </Menu>
+          </Dropdown> */}
+          <Dropdown menu={{ items }}>
+            <a onClick={(e) => e.preventDefault()}>
+              <Space>
+                Hi~,{user?.name}
+              </Space>
+            </a>
+          </Dropdown>
         </HeaderRight>
       </Header>
       <Main>
@@ -35,7 +61,8 @@ height: 100vh; */
 
 
 const Header = styled(Row)`
-
+padding: 1.2rem;
+box-shadow: 0 0 5px 0 rgba(0,0,0,0.1)
 `
 
 const HeaderLeft = styled(Row)`
