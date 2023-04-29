@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // 排除为0的状况
 export const isFalsy = (value: unknown) => value === 0 ? false : !value;
@@ -59,7 +59,7 @@ export const useArray = <T>(initialArray: T[]) => {
 }
 
 export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) => {
-  const oldTitle = document.title
+  const oldTitle = useRef(document.title).current
 
   useEffect(() => {
     document.title = title
@@ -68,9 +68,11 @@ export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) =
   useEffect(() => {
     return () => {
       if (!keepOnUnmount) {
+        // 如果不添加指定依赖，返回的是旧的 title
         document.title = oldTitle
       }
     }
-  }, [])
+
+  }, [keepOnUnmount, oldTitle])
 
 }
