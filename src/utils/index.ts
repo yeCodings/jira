@@ -2,19 +2,20 @@ import { useEffect, useState } from 'react';
 
 // 排除为0的状况
 export const isFalsy = (value: unknown) => value === 0 ? false : !value;
+export const isVoid = (value: unknown) => value === undefined || value == null || value === "";
 
 // 在一个函数里，改变传入的对象本身是不好的
 // 清除对象里的空值
-export const cleanObject = (object: object) => {
+export const cleanObject = (object: { [key: string]: unknown }) => {
 
   // 等同于Object.assign({},object)
   const result = { ...object }
 
   Object.keys(result).forEach(key => {
-    // @ts-ignore
+
     const value = result[key];
-    if (isFalsy(value)) {
-      //@ts-ignore
+    if (isVoid(value)) {
+      // isFalsy 可能存在value为false的时候造成误删，改用 isVoid
       delete result[key]
     }
   })
@@ -40,4 +41,36 @@ export const useDebounce = <V>(value: V, delay?: number) => {
   }, [value, delay])
 
   return debouncedValue
-} 
+}
+
+export const useArray = <T>(initialArray: T[]) => {
+  const [value, setValue] = useState(initialArray)
+  return {
+    value,
+    setValue,
+    add: (item: T) => setValue([...value, item]),
+    clear: () => setValue([]),
+    removeIndex: (index: number) => {
+      const copy = [...value]
+      copy.splice(index, 1)
+      setValue(copy)
+    }
+  }
+}
+
+export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) => {
+  const oldTitle = document.title
+
+  useEffect(() => {
+    document.title = title
+  }, [title])
+
+  useEffect(() => {
+    return () => {
+      if (!keepOnUnmount) {
+        document.title = oldTitle
+      }
+    }
+  }, [])
+
+}

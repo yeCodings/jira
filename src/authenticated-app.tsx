@@ -13,9 +13,9 @@ export const AuthenticatedApp = () => {
     {
       key: '1',
       label: (
-        <a target="_blank" onClick={logout}>
+        <Button type={'link'} target="_blank" onClick={logout}>
           登出
-        </a>
+        </Button>
       ),
     },
   ]
@@ -37,11 +37,11 @@ export const AuthenticatedApp = () => {
             </Menu>
           </Dropdown> */}
           <Dropdown menu={{ items }}>
-            <a onClick={(e) => e.preventDefault()}>
+            <Button type={'link'} onClick={(e) => e.preventDefault()}>
               <Space>
                 Hi~,{user?.name}
               </Space>
-            </a>
+            </Button>
           </Dropdown>
         </HeaderRight>
       </Header>
