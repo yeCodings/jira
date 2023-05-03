@@ -60,6 +60,7 @@
   },
   "devDependencies": {
     "@types/react-helmet": "^6.1.6",
+    "@welldone-software/why-did-you-render": "^7.0.1",
     "commitizen": "^4.3.0",
     "commitlint": "^17.6.1",
     "conventional-changelog-cli": "^2.2.2",
