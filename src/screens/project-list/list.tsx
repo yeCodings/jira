@@ -1,7 +1,10 @@
 import React from "react"
 import { User } from "./search-panel";
 import { Table } from "antd";
+import { TableProps } from "antd/es/table";
 import dayjs from "dayjs";
+import { Link, BrowserRouter as Router } from "react-router-dom";
+
 
 interface Project {
   id: string;
@@ -12,17 +15,22 @@ interface Project {
   created: number;
 }
 
-interface ListProps {
+interface ListProps extends TableProps<Project> {
   users: User[];
   list: Project[];
 }
 
 export const List = ({ users, list }: ListProps) => {
-  return <Table pagination={false} columns={[
+  return <Table pagination={false} rowKey={'id'} columns={[
     {
       title: '名称',
-      dataIndex: 'name',
-      sorter: (a, b) => a.name.localeCompare(b.name)
+      // localeCompare 是 JavaScript 字符串对象的方法，用于比较两个字符串并返回其在字母表中的排序顺序。这个方法可以通过字符串对象的原型链直接调用
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      render(value, project) {
+        return (
+          <Link to={`${String(project.id)}`}>{project.name}</Link>
+        );
+      }
     },
     {
       title: '部门',
