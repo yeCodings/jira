@@ -4,6 +4,8 @@ import { Table } from "antd";
 import { TableProps } from "antd/es/table";
 import dayjs from "dayjs";
 import { Link, BrowserRouter as Router } from "react-router-dom";
+import { Pin } from "components/pin";
+import { useEditProject } from "utils/project";
 
 
 export interface Project {
@@ -21,7 +23,18 @@ interface ListProps extends TableProps<Project> {
 }
 
 export const List = ({ users, list }: ListProps) => {
+  const { mutate } = useEditProject()
+
+  // 先得到id，后得到pin，可以使用函数柯理化编写pinProject函数
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin })
+
   return <Table pagination={false} rowKey={'id'} columns={[
+    {
+      title: <Pin checked={true} disabled={true} />,
+      render(value, project) {
+        return <Pin checked={project.pin} onCheckedChange={pinProject(project.id)} />
+      }
+    },
     {
       title: '名称',
       // localeCompare 是 JavaScript 字符串对象的方法，用于比较两个字符串并返回其在字母表中的排序顺序。这个方法可以通过字符串对象的原型链直接调用
