@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useMountedRef } from "utils";
 
 interface State<D> {
   error: Error | null;
@@ -12,32 +13,50 @@ const defaultInitialState: State<null> = {
   error: null,
 };
 
-export const useAsync = <D>(initialState?: State<D>) => {
+const defaultConfig = {
+  throwOnError: false,
+};
+
+export const useAsync = <D>(
+  initialState?: State<D>,
+  initialConfig?: typeof defaultConfig,
+) => {
+  const config = { ...defaultConfig, ...initialConfig };
   const [state, setState] = useState<State<D>>({
     ...defaultInitialState,
     ...initialState,
   });
 
+  const mountedRef = useMountedRef()
+
+  /** 
+   *  useState 直接传入函数的意思是 惰性初始化
+   *  如果要使用useState 保存函数，需要再套一层 箭头函数
+   * @type {*}
+   */
   const [retry, setRetry] = useState(() => () => {
 
   })
 
-  const setData = (data: D) =>
+  const setData = useCallback((data: D) =>
     setState({
       data,
       stat: "success",
       error: null,
-    });
+    }), [])
 
-  const setError = (error: Error) =>
-    setState({
-      error,
-      stat: "error",
-      data: null,
-    });
+  const setError = useCallback(
+    (error: Error) =>
+      setState({
+        error,
+        stat: "error",
+        data: null,
+      }),
+    []
+  );
 
   // run 用来触发异步请求
-  const run = (
+  const run = useCallback((
     promise: Promise<D>,
     runConfig?: { retry: () => Promise<D> }
   ) => {
@@ -51,17 +70,20 @@ export const useAsync = <D>(initialState?: State<D>) => {
       }
     });
 
-    setState({ ...state, stat: "loading" });
+    setState(prevState => ({ ...prevState, stat: "loading" }));
+
     return promise
       .then((data) => {
+        // if (mountedRef.current)
         setData(data);
         return data;
       })
       .catch((error) => {
         setError(error);
-        return error;
+        if (config.throwOnError) return Promise.reject(error)
+        return error
       });
-  };
+  }, [config.throwOnError, mountedRef, setData, setError])
 
   return {
     isIdle: state.stat === "idle",
