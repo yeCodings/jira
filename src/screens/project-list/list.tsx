@@ -20,13 +20,14 @@ export interface Project {
 interface ListProps extends TableProps<Project> {
   users: User[];
   list: Project[];
+  reFresh?: () => void;
 }
 
-export const List = ({ users, list }: ListProps) => {
+export const List = ({ users, ...props }: ListProps) => {
   const { mutate } = useEditProject()
 
   // 先得到id，后得到pin，可以使用函数柯理化编写pinProject函数
-  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin })
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin }).then(props.reFresh)
 
   return <Table pagination={false} rowKey={'id'} columns={[
     {
@@ -65,5 +66,5 @@ export const List = ({ users, list }: ListProps) => {
         </span>
       }
     },
-  ]} dataSource={list} />
+  ]} dataSource={props.list} />
 }

@@ -7,12 +7,13 @@ import { Typography } from "antd";
 import { useProjects } from "utils/project";
 import { useUsers } from "utils/user";
 import { useProjectScreenParams } from "./util";
+import { useAsync } from "utils/use-async";
 
 // 基本数据类型，组件状态 可以放到 hooks 的依赖里面
 // 非组件状态的对象，不可以放到 hooks 的依赖里面；会引起无限渲染
 export const ProjectListScreen = () => {
   const [param, setParam] = useProjectScreenParams()
-  const { isLoading, error, data: list } = useProjects(useDebounce(param, 200));
+  const { isLoading, error, data: list, retry } = useProjects(useDebounce(param, 200));
   const { data: users } = useUsers();
 
   return (
@@ -22,7 +23,7 @@ export const ProjectListScreen = () => {
       {error ? (
         <Typography.Text type={"danger"}>{error.message}</Typography.Text>
       ) : null}
-      <List loading={isLoading} users={users || []} list={list || []} />
+      <List reFresh={retry} loading={isLoading} users={users || []} list={list || []} />
     </Container>
   );
 };
