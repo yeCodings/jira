@@ -13,7 +13,7 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
       keys.reduce((prev, key) => {
         return { ...prev, [key]: searchParams.get(key) || '' }
       }, {} as { [key in K]: string }),
-      [searchParams, keys]
+      [searchParams]
     ),
     (params: Partial<{ [key in K]: unknown }>) => {
       // iterator 可以被 key of 遍历； obj[Symbol.interator]

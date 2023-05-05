@@ -6,10 +6,10 @@ import dayjs from "dayjs";
 import { Link, BrowserRouter as Router } from "react-router-dom";
 
 
-interface Project {
-  id: string;
+export interface Project {
+  id: number;
   name: string;
-  personId: string;
+  personId: number;
   pin: boolean;
   organization: string;
   created: number;
