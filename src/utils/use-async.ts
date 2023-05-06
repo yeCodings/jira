@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useReducer, useState } from "react";
 import { useMountedRef } from "utils";
 
 interface State<D> {
@@ -17,17 +17,30 @@ const defaultConfig = {
   throwOnError: false,
 };
 
+const useSafeDispatch = <T>(dispatch: (...args: T[]) => void) => {
+  const mountedRef = useMountedRef()
+
+  return useCallback((...args: T[]) => { mountedRef.current ? dispatch(...args) : void 0 }, [dispatch, mountedRef])
+}
+
+// 用 reducer改造
 export const useAsync = <D>(
   initialState?: State<D>,
   initialConfig?: typeof defaultConfig,
 ) => {
   const config = { ...defaultConfig, ...initialConfig };
-  const [state, setState] = useState<State<D>>({
-    ...defaultInitialState,
-    ...initialState,
-  });
+  const [state, dispatch] = useReducer(
+    (
+      state: State<D>,
+      action: Partial<State<D>>
+    ) => (
+      { ...state, ...action }),
+    {
+      ...defaultInitialState,
+      ...initialState,
+    });
 
-  const mountedRef = useMountedRef()
+  const safeDispatch = useSafeDispatch(dispatch)
 
   /** 
    *  useState 直接传入函数的意思是 惰性初始化
@@ -39,20 +52,20 @@ export const useAsync = <D>(
   })
 
   const setData = useCallback((data: D) =>
-    setState({
+    safeDispatch({
       data,
       stat: "success",
       error: null,
-    }), [])
+    }), [safeDispatch])
 
   const setError = useCallback(
     (error: Error) =>
-      setState({
+      safeDispatch({
         error,
         stat: "error",
         data: null,
       }),
-    []
+    [safeDispatch]
   );
 
   // run 用来触发异步请求
@@ -70,12 +83,11 @@ export const useAsync = <D>(
       }
     });
 
-    setState(prevState => ({ ...prevState, stat: "loading" }));
+    safeDispatch({ stat: "loading" });
 
     return promise
       .then((data) => {
         // if (mountedRef.current)
-        setData(data);
         return data;
       })
       .catch((error) => {
@@ -83,7 +95,7 @@ export const useAsync = <D>(
         if (config.throwOnError) return Promise.reject(error)
         return error
       });
-  }, [config.throwOnError, mountedRef, setData, setError])
+  }, [config.throwOnError, setData, setError, safeDispatch])
 
   return {
     isIdle: state.stat === "idle",
