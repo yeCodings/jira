@@ -11,7 +11,9 @@ import { Button } from "antd/es/radio";
 
 // 基本数据类型，组件状态 可以放到 hooks 的依赖里面
 // 非组件状态的对象，不可以放到 hooks 的依赖里面；会引起无限渲染
-export const ProjectListScreen = (props: { setProjectModalOpen: (isOpen: boolean) => void }) => {
+export const ProjectListScreen = (
+  props: { projectButton: JSX.Element }
+) => {
   const [param, setParam] = useProjectScreenParams()
   const { isLoading, error, data: list, retry } = useProjects(useDebounce(param, 200));
   const { data: users } = useUsers();
@@ -20,13 +22,18 @@ export const ProjectListScreen = (props: { setProjectModalOpen: (isOpen: boolean
     <Container>
       <Row between={true}>
         <h1>项目列表</h1>
-        <Button onClick={() => props.setProjectModalOpen(true)}>创建项目</Button>
+        {props.projectButton}
       </Row>
       <SearchPanel users={users || []} param={param} setParam={setParam} />
       {error ? (
         <Typography.Text type={"danger"}>{error.message}</Typography.Text>
       ) : null}
-      <List reFresh={retry} loading={isLoading} users={users || []} list={list || []} setProjectModalOpen={props.setProjectModalOpen} />
+      <List
+        reFresh={retry}
+        loading={isLoading}
+        users={users || []}
+        list={list || []}
+        projectButton={props.projectButton} />
     </Container>
   );
 };

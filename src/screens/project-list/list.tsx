@@ -1,6 +1,6 @@
 import React from "react"
 import { User } from "./search-panel";
-import { Dropdown, Menu, MenuProps, Table } from "antd";
+import { Button, Dropdown, Menu, MenuProps, Space, Table } from "antd";
 import { TableProps } from "antd/es/table";
 import dayjs from "dayjs";
 import { Link, BrowserRouter as Router } from "react-router-dom";
@@ -23,7 +23,7 @@ interface ListProps extends TableProps<Project> {
   users: User[];
   list: Project[];
   reFresh?: () => void;
-  setProjectModalOpen: (isOpen: boolean) => void;
+  projectButton: JSX.Element;
 }
 
 export const List = ({ users, ...props }: ListProps) => {
@@ -31,18 +31,6 @@ export const List = ({ users, ...props }: ListProps) => {
 
   // 先得到id，后得到pin，可以使用函数柯理化编写pinProject函数
   const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin }).then(props.reFresh)
-  const items: MenuProps['items'] = [
-    {
-      label: '编辑',
-      key: '1',
-      icon: <UserOutlined />,
-    },
-  ]
-
-  const menuProps = {
-    items,
-    onClick: () => props.setProjectModalOpen(true),
-  };
 
   return <Table pagination={false} rowKey={'id'} columns={[
     {
@@ -83,8 +71,13 @@ export const List = ({ users, ...props }: ListProps) => {
     },
     {
       render(value, project) {
-        return <Dropdown menu={menuProps}>
-          <ButtonNoPadding>...</ButtonNoPadding>
+        return <Dropdown
+          // 自定义下拉框内容
+          dropdownRender={(menu) =>
+            props.projectButton
+          }
+        >
+          <ButtonNoPadding style={{ border: 'none' }}>...</ButtonNoPadding>
         </Dropdown>
       }
     }
