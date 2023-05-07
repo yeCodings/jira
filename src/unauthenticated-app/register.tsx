@@ -3,7 +3,11 @@ import { useAuth } from "context/auth-context";
 import { LongButton } from "unauthenticated-app";
 
 
-export const RegisterScreen = () => {
+export const RegisterScreen = ({
+  onError,
+}: {
+  onError: (error: Error) => void;
+}) => {
   const { register, user } = useAuth()
 
   const handleSubmit = (values: { username: string, password: string }) => {

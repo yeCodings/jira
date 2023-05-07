@@ -47,9 +47,7 @@ export const useAsync = <D>(
    *  如果要使用useState 保存函数，需要再套一层 箭头函数
    * @type {*}
    */
-  const [retry, setRetry] = useState(() => () => {
-
-  })
+  const [retry, setRetry] = useState(() => () => { })
 
   const setData = useCallback((data: D) =>
     safeDispatch({
@@ -87,7 +85,7 @@ export const useAsync = <D>(
 
     return promise
       .then((data) => {
-        // if (mountedRef.current)
+        setData(data)
         return data;
       })
       .catch((error) => {

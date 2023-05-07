@@ -6,11 +6,12 @@ import styled from "@emotion/styled"
 import logo from 'assets/logo.svg'
 import left from 'assets/left.svg'
 import right from 'assets/right.svg'
-import { Helmet } from 'react-helmet'
 import { useDocumentTitle } from "utils"
+import { ErrorBox } from "components/lib"
 
 export const UnauthenticateApp = () => {
   const [isRegister, setIsRegister] = useState(false)
+  const [error, setError] = useState<Error | null>(null);
   useDocumentTitle('请登录或注册')
   return (
     <Container>
@@ -19,11 +20,12 @@ export const UnauthenticateApp = () => {
       <Background />
       <ShadowCard>
         <Title>
-          {isRegister ? '请登录' : '请注册'}
+          {!isRegister ? '请登录' : '请注册'}
         </Title>
-        {isRegister ? <LoginScreen /> : <RegisterScreen />}
+        <ErrorBox error={error} />
+        {!isRegister ? <LoginScreen onError={setError} /> : <RegisterScreen onError={setError} />}
         <Divider />
-        <Button type={'link'} onClick={() => setIsRegister(!isRegister)}>{isRegister ? "没有账号?去注册" : "已有账号？直接登录"}</Button>
+        <Button type={'link'} onClick={() => setIsRegister(!isRegister)}>{!isRegister ? "没有账号?去注册" : "已有账号？直接登录"}</Button>
       </ShadowCard>
     </Container>
   )

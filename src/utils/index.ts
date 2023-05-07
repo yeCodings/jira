@@ -104,9 +104,9 @@ export const useMountedRef = () => {
   const mountedRef = useRef(false)
 
   useEffect(() => {
-    mountedRef.current = false
+    mountedRef.current = true
     return () => {
-      mountedRef.current = true
+      mountedRef.current = false
     }
   })
 
