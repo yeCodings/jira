@@ -8,6 +8,8 @@ import { Pin } from "components/pin";
 import { useEditProject } from "utils/project";
 import { ButtonNoPadding } from "components/lib";
 import { UserOutlined } from '@ant-design/icons'
+import { useDispatch } from "react-redux";
+import { projectListAction } from "./project-list.slice";
 
 
 export interface Project {
@@ -23,12 +25,11 @@ interface ListProps extends TableProps<Project> {
   users: User[];
   list: Project[];
   reFresh?: () => void;
-  projectButton: JSX.Element;
 }
 
 export const List = ({ users, ...props }: ListProps) => {
   const { mutate } = useEditProject()
-
+  const dispatch = useDispatch()
   // 先得到id，后得到pin，可以使用函数柯理化编写pinProject函数
   const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin }).then(props.reFresh)
 
@@ -74,7 +75,10 @@ export const List = ({ users, ...props }: ListProps) => {
         return <Dropdown
           // 自定义下拉框内容
           dropdownRender={(menu) =>
-            props.projectButton
+            <ButtonNoPadding
+              type={'link'}
+              onClick={() => dispatch(projectListAction.openProjectModal())}
+            >创建项目</ButtonNoPadding>
           }
         >
           <ButtonNoPadding style={{ border: 'none' }}>...</ButtonNoPadding>
