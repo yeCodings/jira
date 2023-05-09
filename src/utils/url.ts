@@ -11,6 +11,7 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
   return [
     useMemo(
       () =>
+        // Object.fromEntries 接受一个可迭代对象 (iterable)，返回一个新的对象，该对象的属性由原对象的键值对组成。该方法与 Object.entries() 的作用正好相反。
         subset(Object.fromEntries(searchParams), stateKeys) as {
           [key in K]: string;
         },

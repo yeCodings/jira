@@ -1,13 +1,14 @@
 import React from "react"
 import { User } from "./search-panel";
-import { Button, Dropdown, Menu, MenuProps, Space, Table } from "antd";
+import { Dropdown, Table } from "antd";
 import { TableProps } from "antd/es/table";
 import dayjs from "dayjs";
-import { Link, BrowserRouter as Router } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Pin } from "components/pin";
 import { useEditProject } from "utils/project";
 import { ButtonNoPadding } from "components/lib";
-import { UserOutlined } from '@ant-design/icons'
+import { useProjectModal } from "./util";
+
 
 
 export interface Project {
@@ -23,7 +24,7 @@ interface ListProps extends TableProps<Project> {
   users: User[];
   list: Project[];
   reFresh?: () => void;
-  projectButton: JSX.Element;
+  // projectButton: JSX.Element;
 }
 
 export const List = ({ users, ...props }: ListProps) => {
@@ -31,6 +32,7 @@ export const List = ({ users, ...props }: ListProps) => {
 
   // 先得到id，后得到pin，可以使用函数柯理化编写pinProject函数
   const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin }).then(props.reFresh)
+  const { open } = useProjectModal()
 
   return <Table pagination={false} rowKey={'id'} columns={[
     {
@@ -74,7 +76,7 @@ export const List = ({ users, ...props }: ListProps) => {
         return <Dropdown
           // 自定义下拉框内容
           dropdownRender={(menu) =>
-            props.projectButton
+            <ButtonNoPadding type={'link'} onClick={open} >创建项目</ButtonNoPadding>
           }
         >
           <ButtonNoPadding style={{ border: 'none' }}>...</ButtonNoPadding>

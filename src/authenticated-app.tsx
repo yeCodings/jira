@@ -8,51 +8,32 @@ import { Navigate, Route, Routes } from "react-router"
 import { BrowserRouter as Router } from "react-router-dom"
 import { ProjectScreen } from "screens/project"
 import { resetRoute } from "utils"
-import { useState } from "react"
 import { ProjectModal } from "screens/project-list/project-modal"
 import { ProjectPopover } from "components/project-popover"
 
+
 export const AuthenticatedApp = () => {
-  const [projectModalOpen, setProjectModalOpen] = useState(false)
-  const onClose = () => setProjectModalOpen(false)
 
   return (
     <Container>
-      <PageHeader
-        projectButton={
-          <ButtonNoPadding
-            type={'link'}
-            onClick={() => setProjectModalOpen(true)}
-          >创建项目
-          </ButtonNoPadding>
-        }
-      />
-      <Main>
-        <Router>
+      <Router>
+        <PageHeader />
+        <Main>
           <Routes>
             <Route
               path={'/projects'}
-              element={<ProjectListScreen
-                projectButton={
-                  <ButtonNoPadding
-                    type={'link'}
-                    onClick={() => setProjectModalOpen(true)}
-                  >创建项目
-                  </ButtonNoPadding>
-                } />} />
+              element={<ProjectListScreen />} />
             <Route path={'/projects/:projectId/*'} element={<ProjectScreen />} />
             <Navigate to={'/projects'} />
           </Routes>
-        </Router>
-      </Main>
-      <ProjectModal projectModalOpen={projectModalOpen} onClose={onClose} />
+        </Main>
+        <ProjectModal />
+      </Router>
     </Container>
   )
 }
 
-const PageHeader = (
-  props: { projectButton: JSX.Element }
-) => {
+const PageHeader = () => {
 
   return (
     <Header between={true}>
@@ -61,7 +42,7 @@ const PageHeader = (
           <SoftWareLogo width={'2.5rem'} color={'rgb(38,132,255)'} />
           <h3>Jira SoftWare</h3>
         </ButtonNoPadding>
-        <ProjectPopover {...props} />
+        <ProjectPopover />
         <span>用户</span>
       </HeaderLeft>
       <HeaderRight>
