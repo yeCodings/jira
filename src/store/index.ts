@@ -1,8 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit"
 import { projectListSlice } from "screens/project-list/project-list.slice"
+import { authSlice } from "./auth.slice"
 
+// 注册事件
 export const rootReducer = {
-  projectList: projectListSlice.reducer
+  projectList: projectListSlice.reducer,
+  auth: authSlice.reducer
 }
 
 export const store = configureStore({
