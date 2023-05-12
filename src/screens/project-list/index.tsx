@@ -4,14 +4,14 @@ import { useDebounce } from "../../utils";
 import styled from "@emotion/styled";
 import { useProjects } from "utils/project";
 import { useUsers } from "utils/user";
-import { useProjectModal, useProjectScreenParams } from "./util";
+import { useProjectModal, useProjectSearchParams } from "./util";
 import { ButtonNoPadding, ErrorBox, Row } from "components/lib";
 
 
 // 基本数据类型，组件状态 可以放到 hooks 的依赖里面
 // 非组件状态的对象，不可以放到 hooks 的依赖里面；会引起无限渲染
 export const ProjectListScreen = () => {
-  const [param, setParam] = useProjectScreenParams()
+  const [param, setParam] = useProjectSearchParams()
   const { isLoading, error, data: list } = useProjects(useDebounce(param, 200));
   const { data: users } = useUsers();
   const { open } = useProjectModal()

@@ -1,7 +1,7 @@
 import { Project } from "screens/project-list/list";
 import { useHttp } from "./http";
-import { useAsync } from "./use-async";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { QueryKey, useMutation, useQuery } from "react-query";
+import { useAddConfig, useDeleteConfig, useEditConfig } from "./use-optimistic-option";
 
 // 获取projects 信息
 export const useProjects = (param?: Partial<Project>) => {
@@ -14,13 +14,10 @@ export const useProjects = (param?: Partial<Project>) => {
 // 编辑
 /**
  * 使用 client 方法来向服务器发送 PATCH 请求，更新指定 ID 的项目数据。
- * 同时在请求成功时，我们使用 queryClient.invalidateQueries('projects') 来让缓存中名为 projects 的查询数据失效，
- * 以保证下次从缓存中获取数据时，可以获取到最新的项目信息。
  * @returns 返回更新后的数据
  */
-export const useEditProject = () => {
+export const useEditProject = (queryKey: QueryKey) => {
   const client = useHttp()
-  const queryClient = useQueryClient()
 
   // useMutation 和 useQueryClient 配合实现缓存管理
   return useMutation(
@@ -28,28 +25,39 @@ export const useEditProject = () => {
     (params: Partial<Project>) => client(`projects/${params.id}`, {
       method: 'PATCH',
       data: params
-    }), {
-    // mutation 成功执行时，onSuccess 回调函数会被调用, 
-    onSuccess: () => queryClient.invalidateQueries('projects')
-  })
+    }),
+    useEditConfig(queryKey)
+  )
 }
 
 // 添加
-export const useAddProject = () => {
+export const useAddProject = (queryKey: QueryKey) => {
   const client = useHttp()
-  const queryClient = useQueryClient()
 
   return useMutation(
     // 异步更新数据
     (params: Partial<Project>) => client(`projects`, {
       method: 'POST',
       data: params
-    }), {
-    // mutation 成功执行时，onSuccess 回调函数会被调用, 
-    onSuccess: () => queryClient.invalidateQueries('projects')
-  })
+    }),
+    useAddConfig(queryKey)
+  )
 }
 
+// 删除
+export const useDeleteProject = (queryKey: QueryKey) => {
+  const client = useHttp()
+
+  return useMutation(
+    // 异步更新数据
+    ({ id }: { id: number }) => client(`projects/${id}`, {
+      method: 'DELETE',
+    }),
+    useDeleteConfig(queryKey)
+  )
+}
+
+// 获取当前信息
 export const useProject = (id: number) => {
   const client = useHttp()
 
