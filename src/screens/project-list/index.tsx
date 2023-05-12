@@ -2,18 +2,17 @@ import { SearchPanel } from "screens/project-list/search-panel";
 import { List } from "screens/project-list/list";
 import { useDebounce } from "../../utils";
 import styled from "@emotion/styled";
-import { Typography } from "antd";
 import { useProjects } from "utils/project";
 import { useUsers } from "utils/user";
 import { useProjectModal, useProjectScreenParams } from "./util";
-import { ButtonNoPadding, Row } from "components/lib";
-import { Button } from "antd/es/radio";
+import { ButtonNoPadding, ErrorBox, Row } from "components/lib";
+
 
 // 基本数据类型，组件状态 可以放到 hooks 的依赖里面
 // 非组件状态的对象，不可以放到 hooks 的依赖里面；会引起无限渲染
 export const ProjectListScreen = () => {
   const [param, setParam] = useProjectScreenParams()
-  const { isLoading, error, data: list, retry } = useProjects(useDebounce(param, 200));
+  const { isLoading, error, data: list } = useProjects(useDebounce(param, 200));
   const { data: users } = useUsers();
   const { open } = useProjectModal()
 
@@ -29,11 +28,8 @@ export const ProjectListScreen = () => {
         </ButtonNoPadding>
       </Row>
       <SearchPanel users={users || []} param={param} setParam={setParam} />
-      {error ? (
-        <Typography.Text type={"danger"}>{error.message}</Typography.Text>
-      ) : null}
+      <ErrorBox error={error} />
       <List
-        reFresh={retry}
         loading={isLoading}
         users={users || []}
         list={list || []}
@@ -42,7 +38,7 @@ export const ProjectListScreen = () => {
   );
 };
 
-ProjectListScreen.whyDidYouRender = true
+ProjectListScreen.whyDidYouRender = false
 
 /**
 // class组件里面的设置

@@ -5,8 +5,8 @@ type SelectProps = React.ComponentProps<typeof Select>
 
 // 通过继承SelectProps，获取 select 所有的属性
 interface IdSelectProps extends Omit<SelectProps, 'value' | 'onChange' | 'options'> {
-  value: Raw | null | undefined,
-  onChange: (value?: number) => void,
+  value?: Raw | null | undefined,
+  onChange?: (value?: number) => void,
   defaultOptionName?: string,
   options?: { name: string, id: number }[]
 }
@@ -22,7 +22,7 @@ export const IdSelect = (props: IdSelectProps) => {
   const { value, onChange, defaultOptionName, options, ...restProps } = props;
   return <Select
     value={options?.length ? toNumber(value) : 0}
-    onChange={value => onChange(toNumber(value) || undefined)}
+    onChange={value => onChange?.(toNumber(value) || undefined)}
     {...restProps}
   >
     {

@@ -20,11 +20,11 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
     (params: Partial<{ [key in K]: unknown }>) => {
       // iterator
       // iterator: https://codesandbox.io/s/upbeat-wood-bum3j?file=/src/index.js
-      const o = cleanObject({
+      const obj = cleanObject({
         ...Object.fromEntries(searchParams),
         ...params,
       }) as URLSearchParamsInit;
-      return setSearchParam(o);
+      return setSearchParam(obj);
     },
   ] as const;
 };

@@ -29,10 +29,12 @@ interface ListProps extends TableProps<Project> {
 
 export const List = ({ users, ...props }: ListProps) => {
   const { mutate } = useEditProject()
+  const { startEdit } = useProjectModal()
+  const { open } = useProjectModal()
 
   // 先得到id，后得到pin，可以使用函数柯理化编写pinProject函数
-  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin }).then(props.reFresh)
-  const { open } = useProjectModal()
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin })
+  const editProject = (id: number) => () => startEdit(id)
 
   return <Table pagination={false} rowKey={'id'} columns={[
     {
@@ -76,7 +78,10 @@ export const List = ({ users, ...props }: ListProps) => {
         return <Dropdown
           // 自定义下拉框内容
           dropdownRender={(menu) =>
-            <ButtonNoPadding type={'link'} onClick={open} >创建项目</ButtonNoPadding>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <ButtonNoPadding type={'link'} onClick={editProject(project.id)} >编辑项目</ButtonNoPadding>
+              <ButtonNoPadding type={'link'} onClick={open} >删除项目</ButtonNoPadding>
+            </div>
           }
         >
           <ButtonNoPadding style={{ border: 'none' }}>...</ButtonNoPadding>

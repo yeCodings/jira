@@ -1,5 +1,7 @@
 import { useUrlQueryParam } from "utils/url"
 import { useMemo } from 'react';
+import { useProject } from "utils/project";
+import { useSearchParams } from "react-router-dom";
 
 // 项目列表的搜索参数
 export const useProjectScreenParams = () => {
@@ -9,7 +11,6 @@ export const useProjectScreenParams = () => {
     setParam
   ] as const // 将一个表达式中所有的字面量类型推导出来，并将它们都转化为不可变的 const 类型
 }
-
 
 /**
  * 一个自定义 hook，用于显示和控制项目模态框的状态。（状态管理器相当于 redux或 context的作用） 
@@ -23,20 +24,21 @@ export const useProjectScreenParams = () => {
 export const useProjectModal = () => {
   // 从 useUrlQueryParam 读取的数据都是字符串
   const [{ projectCreate }, setProjectCreate] = useUrlQueryParam(['projectCreate'])
+  const [{ editingProjectId }, setEditingProjectId] = useUrlQueryParam(['editingProjectId'])
+  const { data: editingProject, isLoading } = useProject(Number(editingProjectId))
+  const [_, setUrlParams] = useSearchParams();
 
   const open = () => setProjectCreate({ projectCreate: true })
-  const close = () => setProjectCreate({ projectCreate: false })
+  const close = () => setUrlParams({ projectCreate: "", editingProjectId: "" });
+  const startEdit = (id: number) => setEditingProjectId({ editingProjectId: id })
 
   // 返回参数较多时，可以返回一个包含模态框是否可见、开、关 对象
   return {
-    projectModalOpen: projectCreate === 'true',
+    projectModalOpen: projectCreate === 'true' || Boolean(editingProject),
     open,
     close,
+    startEdit,
+    isLoading,
+    editingProject,
   }
-
-  // return [
-  //   projectCreate === 'true',
-  //   open,
-  //   close,
-  // ] as const
 }
