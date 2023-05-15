@@ -3,7 +3,7 @@ import { Button, Dropdown, Menu, MenuProps, Space, Switch } from "antd"
 import { ButtonNoPadding, Row } from "components/lib"
 import { useAuth } from "context/auth-context"
 import { ProjectListScreen } from "screens/project-list"
-import { ReactComponent as SoftWareLogo } from 'assets/jirasoftware.svg'
+import { ReactComponent as SoftWareLogo } from 'assets/software-logo.svg'
 import { Navigate, Route, Routes } from "react-router"
 import { BrowserRouter as Router } from "react-router-dom"
 import { ProjectScreen } from "screens/project"
@@ -39,8 +39,7 @@ const PageHeader = () => {
     <Header between={true}>
       <HeaderLeft gap={true}>
         <ButtonNoPadding type={'link'} onClick={resetRoute} style={{ display: 'flex', justifyContent: 'space-around' }}>
-          <SoftWareLogo width={'2.5rem'} color={'rgb(38,132,255)'} />
-          <h3>Jira SoftWare</h3>
+          <SoftWareLogo width={'15rem'} color={'rgb(38,132,255)'} />
         </ButtonNoPadding>
         <ProjectPopover />
         <span>用户</span>

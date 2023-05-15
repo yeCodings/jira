@@ -1,7 +1,8 @@
-import { Project } from "screens/project-list/list";
+
 import { useHttp } from "./http";
 import { QueryKey, useMutation, useQuery } from "react-query";
 import { useAddConfig, useDeleteConfig, useEditConfig } from "./use-optimistic-option";
+import { Project } from "types/project";
 
 // 获取projects 信息
 export const useProjects = (param?: Partial<Project>) => {
@@ -24,7 +25,7 @@ export const useEditProject = (queryKey: QueryKey) => {
     // 异步更新数据
     (params: Partial<Project>) => client(`projects/${params.id}`, {
       method: 'PATCH',
-      data: params
+      data: params,
     }),
     useEditConfig(queryKey)
   )
@@ -38,7 +39,7 @@ export const useAddProject = (queryKey: QueryKey) => {
     // 异步更新数据
     (params: Partial<Project>) => client(`projects`, {
       method: 'POST',
-      data: params
+      data: params,
     }),
     useAddConfig(queryKey)
   )

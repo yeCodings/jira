@@ -1,6 +1,6 @@
 import React from "react"
 import { User } from "./search-panel";
-import { Dropdown, Menu, Modal, Table } from "antd";
+import { Dropdown, Menu, MenuProps, Modal, Table } from "antd";
 import { TableProps } from "antd/es/table";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
@@ -8,33 +8,22 @@ import { Pin } from "components/pin";
 import { useDeleteProject, useEditProject } from "utils/project";
 import { ButtonNoPadding } from "components/lib";
 import { useProjectModal, useProjectQueryKey } from "./util";
+import { Project } from "types/project";
 
-export interface Project {
-  id: number;
-  name: string;
-  personId: number;
-  pin: boolean;
-  organization: string;
-  created: number;
-}
 
 interface ListProps extends TableProps<Project> {
   users: User[];
-  list: Project[];
-  reFresh?: () => void;
-  // projectButton: JSX.Element;
 }
 
 export const List = ({ users, ...props }: ListProps) => {
   const { mutate } = useEditProject(useProjectQueryKey())
   // 先得到id，后得到pin，可以使用函数柯理化编写pinProject函数
-  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin })
+  const pinProject = (id: number) => (pin: boolean) => { mutate({ id, pin }) }
 
   return <Table pagination={false} rowKey={'id'} columns={[
     {
       title: <Pin checked={true} disabled={true} />,
       render(value, project) {
-        console.log('list', project.pin)
         return <Pin checked={project.pin} onCheckedChange={pinProject(project.id)} />
       }
     },
@@ -73,7 +62,7 @@ export const List = ({ users, ...props }: ListProps) => {
         return <More project={project} />
       }
     }
-  ]} dataSource={props.list} />
+  ]} {...props} />
 }
 
 const More = ({ project }: { project: Project }) => {
@@ -92,14 +81,27 @@ const More = ({ project }: { project: Project }) => {
     })
   }
 
-  return (<Dropdown
-    // 自定义下拉框内容
-    dropdownRender={(menu) =>
-      <Menu >
-        <Menu.Item onClick={editProject(project.id)} >编辑项目</Menu.Item>
-        <Menu.Item onClick={() => confirmDeleteProject(project.id)} >删除项目</Menu.Item>
-      </Menu>
+  const items: MenuProps['items'] = [
+    {
+      key: '1',
+      label: (
+        <Menu.Item onClick={editProject(project.id)} >编辑</Menu.Item>
+      ),
+    },
+    {
+      key: '2',
+      label: (
+        <Menu.Item onClick={() => confirmDeleteProject(project.id)} >删除</Menu.Item>
+      ),
     }
+  ]
+
+  return (<Dropdown
+    menu={{ items }}
+  // 自定义下拉框内容
+  // dropdownRender={(menu) =>
+  //   <Menu items={items} />
+  // }
   >
     <ButtonNoPadding style={{ border: 'none' }}>...</ButtonNoPadding>
   </Dropdown>

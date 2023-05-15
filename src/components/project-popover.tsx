@@ -7,17 +7,17 @@ import { ButtonNoPadding } from "./lib"
 export const ProjectPopover = () => {
 
   const { data: projects, } = useProjects()
-  const pinnedProjects = projects?.filter(project => project.pin)
+  const pinnedProjects = projects?.filter((project) => project.pin)
   const { open } = useProjectModal()
 
   const content = <ContentContainer>
     <Typography.Text type={'secondary'}>收藏项目</Typography.Text>
     <List>
       {
-        pinnedProjects?.map(project =>
+        pinnedProjects?.map(project => (
           <List.Item key={project.id}>
             <List.Item.Meta title={project.name} />
-          </List.Item>)
+          </List.Item>))
       }
     </List>
     <Divider />

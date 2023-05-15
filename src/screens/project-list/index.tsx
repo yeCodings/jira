@@ -32,7 +32,7 @@ export const ProjectListScreen = () => {
       <List
         loading={isLoading}
         users={users || []}
-        list={list || []}
+        dataSource={list || []}
       />
     </Container>
   );

@@ -2,7 +2,6 @@ import { Button, Drawer, Form, Input, Spin } from "antd"
 import { useProjectModal, useProjectQueryKey } from "./util"
 import { UserSelect } from "components/user-select"
 import { useAddProject, useEditProject } from "utils/project";
-import { useForm } from "antd/es/form/Form";
 import { useEffect } from "react";
 import { ErrorBox } from "components/lib";
 import styled from "@emotion/styled";
@@ -13,7 +12,7 @@ export const ProjectModal = () => {
 
   const useMutateProject = editingProject ? useEditProject : useAddProject
   const { mutateAsync, error, isLoading: mutateLoading } = useMutateProject(useProjectQueryKey())
-  const [form] = useForm()
+  const [form] = Form.useForm()
 
   const onFinish = (values: any) => {
     mutateAsync({ ...editingProject, ...values }).then(() => {
@@ -22,12 +21,17 @@ export const ProjectModal = () => {
     })
   }
 
+  const closeModal = () => {
+    form.resetFields();
+    close();
+  }
+
   useEffect(() => {
     form.setFieldsValue(editingProject)
   }, [editingProject, form])
 
   return (
-    <Drawer forceRender={true} width={'100%'} open={projectModalOpen} onClose={close}>
+    <Drawer forceRender={true} width={'100%'} open={projectModalOpen} onClose={closeModal}>
       <Container>
         {
           isLoading ? <Spin size={'large'} /> : <> <h3>{title}</h3>

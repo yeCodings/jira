@@ -14,8 +14,8 @@ export const ProjectScreen = () => {
       <Routes>
         <Route path={'/kanban'} element={<KanbanScreen />} />
         <Route path={'/epic'} element={<EpicScreen />} />
-        {/* 如果匹配不上以上两个路由地址，那就都跳转到下面的地址 */}
-        <Navigate to={window.location.pathname + '/kanban'} />
+        {/* 如果匹配不上以上两个路由地址，那就都跳转到下面的地址  replace={true} 代表替换当前的历史记录，跳出这个循环 */}
+        <Navigate to={window.location.pathname + '/kanban'} replace={true} />
       </Routes>
     </>
   )

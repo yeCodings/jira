@@ -6,7 +6,8 @@ import { cleanObject, subset } from "utils"
  *  返回页面url中指定键的参数值
  */
 export const useUrlQueryParam = <K extends string>(keys: K[]) => {
-  const [searchParams, setSearchParam] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  const setSearchParam = useSetUrlSearchParam()
   const [stateKeys] = useState(keys);
   return [
     useMemo(
@@ -18,15 +19,19 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
       [searchParams, stateKeys]
     ),
     (params: Partial<{ [key in K]: unknown }>) => {
-      // iterator
-      // iterator: https://codesandbox.io/s/upbeat-wood-bum3j?file=/src/index.js
-      const obj = cleanObject({
-        ...Object.fromEntries(searchParams),
-        ...params,
-      }) as URLSearchParamsInit;
-      return setSearchParam(obj);
+      return setSearchParam(params);
     },
   ] as const;
 };
 
+export const useSetUrlSearchParam = () => {
+  const [searchParams, setSearchParam] = useSearchParams();
 
+  return (params: { [key in string]: unknown }) => {
+    const obj = cleanObject({
+      ...Object.fromEntries(searchParams),
+      ...params,
+    }) as URLSearchParamsInit;
+    return setSearchParam(obj);
+  }
+}

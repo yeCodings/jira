@@ -63,7 +63,7 @@ background-image: url(${left}),url(${right});
 const Header = styled.header`
 background: url(${logo}) no-repeat center;
 padding: 5rem 0;
-background-size: 4rem;
+background-size: 8rem;
 width: 100%;
 `
 const Title = styled.h2`
