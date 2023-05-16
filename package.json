@@ -13,6 +13,7 @@
     "@types/node": "^16.18.24",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "@types/styled-components": "^5.1.26",
     "antd": "^5.4.6",
     "craco-less": "^2.0.0",
     "dayjs": "^1.11.7",

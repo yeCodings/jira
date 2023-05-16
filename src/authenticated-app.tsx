@@ -11,7 +11,6 @@ import { resetRoute } from "utils"
 import { ProjectModal } from "screens/project-list/project-modal"
 import { ProjectPopover } from "components/project-popover"
 
-
 export const AuthenticatedApp = () => {
 
   return (
@@ -20,9 +19,7 @@ export const AuthenticatedApp = () => {
         <PageHeader />
         <Main>
           <Routes>
-            <Route
-              path={'/projects'}
-              element={<ProjectListScreen />} />
+            <Route path={'/projects'} element={<ProjectListScreen />} />
             <Route path={'/projects/:projectId/*'} element={<ProjectScreen />} />
             <Navigate to={'/projects'} />
           </Routes>
@@ -76,7 +73,11 @@ const User = () => {
 }
 
 
-const Container = styled.div``
+const Container = styled.div`
+ display: grid;
+  grid-template-rows: 6rem 1fr;
+  height: 100vh;
+`
 
 const Header = styled(Row)`
 padding: 1.2rem;
@@ -85,4 +86,8 @@ box-shadow: 0 0 5px 0 rgba(0,0,0,0.1)
 
 const HeaderLeft = styled(Row)``
 const HeaderRight = styled.div``
-const Main = styled.div``
+
+const Main = styled.main`
+display:flex;
+overflow: hidden;
+`

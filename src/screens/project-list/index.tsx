@@ -52,4 +52,5 @@ class Test extends React.Component<any, any> {
 
 const Container = styled.div`
 padding: 3.2rem;
+width: 100vw;
 `
