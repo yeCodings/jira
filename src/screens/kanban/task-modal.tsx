@@ -34,10 +34,10 @@ export const TaskModal = () => {
     Modal.confirm({
       okText: '确定',
       cancelText: '取消',
-      title: '确定删除看板？',
+      title: '确定删除当前项？',
       onOk() {
         return deleteTask({ id: Number(editingTaskId) })
-      }
+      },
     })
     onCancel()
   }
@@ -48,17 +48,13 @@ export const TaskModal = () => {
   }, [form, editingTask])
 
   return <Modal
-    // forceRender 为true 强制渲染
-    forceRender={true}
+    forceRender={true}      // forceRender 为true 强制渲染
     centered={true}
-    footer={null} // 取消默认的底部按钮
-    // okText={'确认'}
-    // cancelText={'取消'}
+    footer={null}           // 取消默认的底部按钮
     confirmLoading={editLoading}
     title={'编辑任务'}
     open={!!editingTaskId}
     onCancel={onCancel}
-    // onOk={onOk}
     style={{ textAlign: 'center' }}
   >
     <Form

@@ -18,7 +18,7 @@ interface ListProps extends TableProps<Project> {
 export const List = ({ users, ...props }: ListProps) => {
   const { mutate } = useEditProject(useProjectQueryKey())
   // 先得到id，后得到pin，可以使用函数柯理化编写pinProject函数
-  const pinProject = (id: number) => (pin: boolean) => { mutate({ id, pin }) }
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin })
 
   return <Table pagination={false} rowKey={'id'} columns={[
     {

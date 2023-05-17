@@ -22,6 +22,7 @@
     "jira-dev-tool": "^1.6.59",
     "qs": "^6.11.1",
     "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "react-query": "^3.39.3",
@@ -60,6 +61,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-beautiful-dnd": "^13.1.4",
     "@types/react-helmet": "^6.1.6",
     "@welldone-software/why-did-you-render": "^7.0.1",
     "commitizen": "^4.3.0",

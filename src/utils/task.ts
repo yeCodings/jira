@@ -1,12 +1,13 @@
 import { Task } from "types/task";
 import { useHttp } from "./http";
 import { QueryKey, useMutation, useQuery } from "react-query";
-import { useAddConfig, useDeleteConfig } from "./use-optimistic-option";
+import { useAddConfig, useDeleteConfig, useReorderTaskConfig } from "./use-optimistic-option";
+import { SortProps } from "./kanban";
+
 
 // 获取tasks 信息
 export const useTasks = (param?: Partial<Task>) => {
   const client = useHttp();
-
   return useQuery<Task[]>(['tasks', param], () => client('tasks', { data: param }))
 }
 
@@ -49,3 +50,21 @@ export const useDeleteTask = (queryKey: QueryKey) => {
     useDeleteConfig(queryKey)
   )
 }
+
+
+// tasks拖拽数据持久化
+export const useReorderTask = (queryKey: QueryKey) => {
+  const client = useHttp()
+
+  return useMutation(
+    (params: SortProps) => {
+      return client('tasks/reorder', {
+        data: params,
+        method: 'POST',
+      })
+    },
+    useReorderTaskConfig(queryKey)
+  )
+}
+
+

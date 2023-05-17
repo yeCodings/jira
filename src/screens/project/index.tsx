@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { Routes, Route, Navigate, useLocation } from "react-router"
-import KanbanScreen from "screens/kanban"
+import { KanbanScreen } from "screens/kanban"
 import EpicScreen from "screens/epic"
 import styled from "@emotion/styled"
 import { Menu } from "antd"

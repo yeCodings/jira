@@ -11,11 +11,11 @@ import { Task } from "types/task"
 import { Mark } from "components/mark"
 import { useDeleteKanban } from "utils/kanban"
 import { ButtonNoPadding, Row } from "components/lib"
+import React from "react"
+import { Drag, Drop, DropChild } from "components/drag-and-drop"
 
 interface KanbanColumnProps {
   kanban: Kanban;
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
   getTasks: (tasks: Task[] | undefined) => void;
 }
 
@@ -44,27 +44,41 @@ const TaskCard = ({ task }: { task: Task }) => {
 }
 
 // 看板列表
-export const KanbanColumn = ({ kanban, getTasks }: KanbanColumnProps) => {
+export const KanbanColumn = React.forwardRef<HTMLDivElement, KanbanColumnProps>(({
+  kanban,
+  getTasks,
+  ...props
+}, ref) => {
   const { data: allTasks } = useTasks(useTasksSearchParams())
-  const tasks = allTasks?.filter(task => task.kanbanId === kanban.id)
+  const tasks = allTasks?.filter((task) => task.kanbanId === kanban.id)
 
   if (tasks && tasks.length >= 5) getTasks(tasks)
 
   return (
-    <Container>
+    <Container ref={ref} {...props}>
       <Row between={true}>
         <h3>{kanban.name}</h3>
-        <More kanban={kanban} />
+        <More kanban={kanban} key={kanban.id} />
       </Row>
       <TasksContainer>
-        {
-          tasks?.map(task => <TaskCard task={task} />)
-        }
+        <Drop type={'ROW'} direction={'vertical'} droppableId={String(kanban.id)}>
+          <DropChild style={{ minHeight: '1rem' }}>
+            {
+              tasks?.map((task, taskIndex) => (
+                <Drag key={task.id} index={taskIndex} draggableId={'task' + task.id} >
+                  <div>
+                    <TaskCard key={task.id} task={task} />
+                  </div>
+                </Drag>
+              ))
+            }
+          </DropChild>
+        </Drop>
         <CreateTask kanbanId={kanban.id} />
       </TasksContainer>
     </Container>
   )
-}
+})
 
 const More = ({ kanban }: { kanban: Kanban }) => {
   const { mutateAsync } = useDeleteKanban(useKanbansQueryKey())
@@ -95,7 +109,6 @@ const More = ({ kanban }: { kanban: Kanban }) => {
   )
 
 }
-
 
 
 export const Container = styled.div`
