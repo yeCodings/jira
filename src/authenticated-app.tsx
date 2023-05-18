@@ -1,5 +1,5 @@
 import styled from "@emotion/styled"
-import { Button, Dropdown, Menu, MenuProps, Space, Switch } from "antd"
+import { Button, Dropdown, MenuProps, Space } from "antd"
 import { ButtonNoPadding, Row } from "components/lib"
 import { useAuth } from "context/auth-context"
 import { ProjectListScreen } from "screens/project-list"
@@ -10,6 +10,7 @@ import { ProjectScreen } from "screens/project"
 import { resetRoute } from "utils"
 import { ProjectModal } from "screens/project-list/project-modal"
 import { ProjectPopover } from "components/project-popover"
+import { UserPopover } from "components/user-popover"
 
 export const AuthenticatedApp = () => {
 
@@ -39,7 +40,7 @@ const PageHeader = () => {
           <SoftWareLogo width={'15rem'} color={'rgb(38,132,255)'} />
         </ButtonNoPadding>
         <ProjectPopover />
-        <span>用户</span>
+        <UserPopover />
       </HeaderLeft>
       <HeaderRight>
         <User />

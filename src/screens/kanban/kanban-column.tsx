@@ -11,12 +11,12 @@ import { Task } from "types/task"
 import { Mark } from "components/mark"
 import { useDeleteKanban } from "utils/kanban"
 import { ButtonNoPadding, Row } from "components/lib"
-import React from "react"
+import React, { Dispatch, SetStateAction, useEffect } from "react"
 import { Drag, Drop, DropChild } from "components/drag-and-drop"
 
 interface KanbanColumnProps {
   kanban: Kanban;
-  getTasks: (tasks: Task[] | undefined) => void;
+  getTasks: Dispatch<SetStateAction<boolean>>;
 }
 
 // 看板icon
@@ -52,7 +52,22 @@ export const KanbanColumn = React.forwardRef<HTMLDivElement, KanbanColumnProps>(
   const { data: allTasks } = useTasks(useTasksSearchParams())
   const tasks = allTasks?.filter((task) => task.kanbanId === kanban.id)
 
-  if (tasks && tasks.length >= 5) getTasks(tasks)
+  // 获取tasks中超过5个的项
+  const getMaxCountByKanbanId = (tasks: Task[] = []) => {
+    let kanbanIdCounts: { [index: string]: number; } = tasks?.reduce((counts: { [index: string]: number }, task) => {
+      let kanbanId = task.kanbanId;
+      counts[kanbanId] = (counts[kanbanId] || 0) + 1;
+      return counts;
+    }, {});
+
+    let maxCount = Math.max(...Object.values(kanbanIdCounts));
+
+    return maxCount;
+  }
+
+  useEffect(() => {
+    getMaxCountByKanbanId(allTasks) < 5 ? getTasks(true) : getTasks(false)
+  }, [getMaxCountByKanbanId])
 
   return (
     <Container ref={ref} {...props}>

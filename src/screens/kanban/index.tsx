@@ -18,7 +18,6 @@ import { CreateKanban } from "screens/kanban/create-kanban";
 import { TaskModal } from "screens/kanban/task-modal";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { Drag, Drop, DropChild } from "components/drag-and-drop";
-import { Task } from "types/task";
 
 
 export const KanbanScreen = () => {
@@ -31,11 +30,6 @@ export const KanbanScreen = () => {
   const isLoading = taskIsLoading || kanbanIsLoading;
 
   const [isActive, setIsActive] = useState<boolean>(true);
-
-  const getTasks = (tasks: Task[] | undefined) => {
-    if (tasks) setIsActive(false)
-    return tasks
-  };
 
   // 添加鼠标滚动，看板列表左右滑动功能
   const listRef = useRef<HTMLDivElement>(null);
@@ -71,7 +65,7 @@ export const KanbanScreen = () => {
                     draggableId={"kanban" + kanban.id}
                     index={index}
                   >
-                    <KanbanColumn kanban={kanban} key={kanban.id} getTasks={getTasks} />
+                    <KanbanColumn kanban={kanban} key={kanban.id} getTasks={setIsActive} />
                   </Drag>
                 ))}
               </DropChild>

@@ -30,7 +30,7 @@ export const useEditConfig = (queryKey: QueryKey) => useConfig(
 )
 export const useAddConfig = (queryKey: QueryKey) => useConfig(
   queryKey,
-  (target, old) => (old ? [...old, target] : [])
+  (target, old) => (old ? [...old, target] : []),
 )
 
 export const useReorderKanbanConfig = (queryKey: QueryKey) =>
